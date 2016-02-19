@@ -52,6 +52,8 @@
 #include <QApplication>
 #include <QStringList>
 
+#include <QListWidget>
+#include <QListWidgetItem>
 Folder::Folder( Folder *parent, const QString &name )
 	: QObject(parent), d_active_window(0)
 {
@@ -186,8 +188,8 @@ Folder* Folder::rootFolder()
  *
  *****************************************************************************/
 
-FolderListItem::FolderListItem( Q3ListView *parent, Folder *f )
-    : Q3ListViewItem( parent )
+/*FolderListItem::FolderListItem( QListWidget *parent, Folder *f )
+    : QListWidget( parent )
 {
     myFolder = f;
 
@@ -199,7 +201,7 @@ FolderListItem::FolderListItem( Q3ListView *parent, Folder *f )
 }
 
 FolderListItem::FolderListItem( FolderListItem *parent, Folder *f )
-    : Q3ListViewItem( parent )
+    : QListWidget( parent )
 {
     myFolder = f;
 
@@ -229,7 +231,7 @@ while (parent)
 	parent = (FolderListItem *)parent->parent();
 	}
 return false;
-}
+}*/
 
 /*****************************************************************************
  *
@@ -237,8 +239,8 @@ return false;
  *
  *****************************************************************************/
 
-FolderListView::FolderListView( QWidget *parent, const QString name )
-	: Q3ListView( parent, name.toLocal8Bit().constData() ), mousePressed( false )
+/*FolderListView::FolderListView( QWidget *parent, const QString name )
+    : QListWidget( parent, name.toLocal8Bit().constData() ), mousePressed( false )
 {
     setAcceptDrops( true );
     viewport()->setAcceptDrops( true );
@@ -246,7 +248,7 @@ FolderListView::FolderListView( QWidget *parent, const QString name )
 
 void FolderListView::startDrag()
 {
-Q3ListViewItem *item = currentItem();
+QListWidgetItem *item = currentItem();
 if (!item)
 	return;
 
@@ -261,30 +263,30 @@ if (item->rtti() == FolderListItem::RTTI)
 else
 	pix = *item->pixmap (0);
 
-Q3IconDrag *drag = new Q3IconDrag(viewport());
-drag->setPixmap(pix, QPoint(pix.width()/2, pix.height()/2 ) );
+//Q3IconDrag *drag = new Q3IconDrag(viewport());
+//drag->setPixmap(pix, QPoint(pix.width()/2, pix.height()/2 ) );
 
-QList<Q3ListViewItem *> lst;
-for (item = firstChild(); item; item = item->itemBelow())
-	{
-	if (item->isSelected())
-		lst.append(item);
-	}
+//QList<QListWidgetItem *> lst;
+//for (item = firstChild(); item; item = item->itemBelow())
+//	{
+//	if (item->isSelected())
+//		lst.append(item);
+//	}
 
-emit dragItems(lst);
-drag->drag();
+//emit dragItems(lst);
+//drag->drag();
 }
 
 void FolderListView::contentsDropEvent( QDropEvent *e )
 {
-Q3ListViewItem *dest = itemAt( contentsToViewport(e->pos()) );
-if ( dest && dest->rtti() == FolderListItem::RTTI)
-	{
-	emit dropItems(dest);
-	e->accept();
-    }
-else
-	e->ignore();
+//Q3ListViewItem *dest = itemAt( contentsToViewport(e->pos()) );
+//if ( dest && dest->rtti() == FolderListItem::RTTI)
+//	{
+//	emit dropItems(dest);
+//	e->accept();
+//    }
+//else
+//	e->ignore();
 }
 
 void FolderListView::keyPressEvent ( QKeyEvent * e )
@@ -294,9 +296,9 @@ if (isRenaming())
 	e->ignore();
 	return;
 	}
-Q3ListViewItem *item = currentItem();
+QListWidgetItem *item = currentItem();
 if (!item) {
-	Q3ListView::keyPressEvent ( e );
+    QListWidget::keyPressEvent ( e );
 	return;
 }
 
@@ -328,7 +330,7 @@ else if(e->key() == Qt::Key_F8)
 	e->accept();
 	}
 else
-	Q3ListView::keyPressEvent ( e );
+    QListWidget::keyPressEvent ( e );
 }
 
 void FolderListView::contentsMouseDoubleClickEvent( QMouseEvent* e )
@@ -339,15 +341,15 @@ void FolderListView::contentsMouseDoubleClickEvent( QMouseEvent* e )
 		return;
 		}
 
-	Q3ListView::contentsMouseDoubleClickEvent( e );
+    QListWidget::contentsMouseDoubleClickEvent( e );
 }
 
 void FolderListView::contentsMousePressEvent( QMouseEvent* e )
 {
-Q3ListView::contentsMousePressEvent(e);
+QListWidget::contentsMousePressEvent(e);
 if (e->button() != Qt::LeftButton) return;
 QPoint p( contentsToViewport( e->pos() ) );
-Q3ListViewItem *i = itemAt( p );
+QListWidgetItem *i = itemAt( p );
 
 if ( i )
 		{// if the user clicked into the root decoration of the item, don't try to start a drag!
@@ -366,7 +368,7 @@ void FolderListView::contentsMouseMoveEvent( QMouseEvent* e )
 if ( mousePressed && ( presspos - e->pos() ).manhattanLength() > QApplication::startDragDistance() )
 	{
 	mousePressed = false;
-	Q3ListViewItem *item = itemAt( contentsToViewport(presspos) );
+    QListWidgetItem *item = itemAt( contentsToViewport(presspos) );
 	if ( item )
 		startDrag();
     }
@@ -376,7 +378,7 @@ void FolderListView::adjustColumns()
 {
 for (int i=0; i < columns (); i++)
 	adjustColumn(i);
-}
+}*/
 
 /*****************************************************************************
  *
@@ -384,10 +386,10 @@ for (int i=0; i < columns (); i++)
  *
  *****************************************************************************/
 
-WindowListItem::WindowListItem( Q3ListView *parent, MyWidget *w )
-    : Q3ListViewItem( parent )
+/*WindowListItem::WindowListItem(QListWidget *parent, MyWidget *w )
+    : QListWidgetItem( parent )
 {
     myWindow = w;
 
 	setDragEnabled ( true );
-}
+}*/

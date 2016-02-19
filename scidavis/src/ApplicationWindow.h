@@ -78,8 +78,8 @@ class Note;
 class MultiLayer;
 class FunctionDialog;
 class Folder;
-class FolderListItem;
-class FolderListView;
+//class FolderListItem;
+//class FolderListView;
 class Plot3DDialog;
 class MyWidget;
 class TableStatistics;
@@ -88,6 +88,7 @@ class Project;
 class AbstractAspect;
 
 class ConsoleWidget;
+class SettingsDialog;
 
 #ifndef TS_PATH
 #define TS_PATH (qApp->applicationDirPath() + "/translations")
@@ -140,8 +141,8 @@ public:
 #endif
 	QWorkspace* d_workspace;
 	QToolBar *file_tools, *graph_tools, *table_tools, *plot_tools, *graph_3D_tools, *edit_tools, *matrix_plot_tools;
-    FolderListView *lv;
-    FolderListView *folders;
+    //FolderListView *lv;
+    //FolderListView *folders;
 	QToolButton *btnResults;
     QWidgetList *hiddenWindows;
     QWidgetList *outWindows;
@@ -428,7 +429,7 @@ public slots:
 	//!  Checks weather the new window name is valid and modifies the name.
 	bool renameWindow(MyWidget *w, const QString &text);
 
-	void maximizeWindow(Q3ListViewItem * lbi);
+    //void maximizeWindow(Q3ListViewItem * lbi);
 	void maximizeWindow();
 	void minimizeWindow();
     //! Changes the geometry of the active MDI window
@@ -630,7 +631,7 @@ public slots:
 	void showCurvePlotDialog();
 	void showCurveWorksheet();
     void showCurveWorksheet(Graph *g, int curveIndex);
-	void showWindowPopupMenu(Q3ListViewItem *it, const QPoint &p, int);
+    //void showWindowPopupMenu(Q3ListViewItem *it, const QPoint &p, int);
 
 	//! Connected to the context menu signal from lv; it's called when there are several items selected in the list
 	void showListViewSelectionMenu(const QPoint &p);
@@ -783,9 +784,9 @@ public slots:
 	bool changeFolder(Folder *newFolder, bool force = false);
 
 	//! Changes the current folder when the user changes the current item in the QListView "folders"
-	void folderItemChanged(Q3ListViewItem *it);
+    //void folderItemChanged(Q3ListViewItem *it);
 	//! Changes the current folder when the user double-clicks on a folder item in the QListView "lv"
-	void folderItemDoubleClicked(Q3ListViewItem *it);
+    //void folderItemDoubleClicked(Q3ListViewItem *it);
 
 	//!  creates and opens the context menu of a folder list view item
 	/**
@@ -794,19 +795,19 @@ public slots:
 	 * \param fromFolders: true means that the user clicked right mouse buttom on an item from QListView "folders"
 	 *					   false means that the user clicked right mouse buttom on an item from QListView "lv"
 	 */
-	void showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p, bool fromFolders);
+    //void showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p, bool fromFolders);
 
 	//!  connected to the SIGNAL contextMenuRequested from the list views
-	void showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p, int);
+    //void showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p, int);
 
 	//!  starts renaming the selected folder by creating a built-in text editor
-	void startRenameFolder();
+    //void startRenameFolder();
 
 	//!  starts renaming the selected folder by creating a built-in text editor
-	void startRenameFolder(Q3ListViewItem *item);
+    //void startRenameFolder(Q3ListViewItem *item);
 
 	//!  checks weather the new folder name is valid and modifies the name
-	void renameFolder(Q3ListViewItem *it, int col, const QString &text);
+    //void renameFolder(Q3ListViewItem *it, int col, const QString &text);
 
 	//!  forces showing all windows in the current folder and subfolders, depending on the user's viewing policy
 	void showAllFolderWindows();
@@ -836,7 +837,7 @@ public slots:
 	void rawSaveFolder(Folder *folder, QIODevice *device);
 
 	//!  adds a folder list item to the list view "lv"
-	void addFolderListViewItem(Folder *f);
+    //void addFolderListViewItem(Folder *f);
 
 	//!  adds a widget list item to the list view "lv"
 	void addListViewItem(MyWidget *w);
@@ -845,24 +846,24 @@ public slots:
 	void setShowWindowsPolicy(int p);
 
 	//!  returns a pointer to the root project folder
-	Folder* projectFolder();
+    //Folder* projectFolder();
 
 	//!  used by the findDialog
 	void find(const QString& s, bool windowNames, bool labels, bool folderNames,
 			  bool caseSensitive, bool partialMatch, bool subfolders);
 
 	//!  initializes the list of items dragged by the user
-	void dragFolderItems(QList<Q3ListViewItem *> items){draggedItems = items;};
+    //void dragFolderItems(QList<Q3ListViewItem *> items){draggedItems = items;};
 
 	//!  Drop the objects in the list draggedItems to the folder of the destination item
-	void dropFolderItems(Q3ListViewItem *dest);
+    //void dropFolderItems(Q3ListViewItem *dest);
 
 	//!  moves a folder item to another
 	/**
 	 * \param src source folder item
 	 * \param dest destination folder item
 	 */
-	void moveFolder(FolderListItem *src, FolderListItem *dest);
+    //void moveFolder(FolderListItem *src, FolderListItem *dest);
 	//@}
 
 	//! \name Scripting
@@ -1030,7 +1031,7 @@ private:
 	int convertOldToNewColorIndex(int cindex);
 
 	//! Stores the pointers to the dragged items from the FolderListViews objects
-	QList<Q3ListViewItem *> draggedItems;
+    //QList<Q3ListViewItem *> draggedItems;
     
     QString helpFilePath;
 
@@ -1156,6 +1157,7 @@ private:
 	Project * d_project;
 
 	bool was_maximized_;
+    SettingsDialog *cg;
 
 private slots:
 	void removeDependentTableStatistics(const AbstractAspect *aspect);

@@ -114,6 +114,8 @@
 #include "scripting/ScriptingLangDialog.h"
 #include "scripting/widgets/ConsoleWidget.h"
 
+#include "ui/SettingsDialog.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -185,8 +187,8 @@ ApplicationWindow::ApplicationWindow()
       consoleWindow(new ConsoleWidget(this)),
 #endif
       d_workspace(new QWorkspace(this)),
-      lv(new FolderListView()),
-      folders(new FolderListView()),
+      //lv(new FolderListView()),
+      //folders(new FolderListView()),
 
       hiddenWindows(new QList<QWidget*>()),
       outWindows(new QList<QWidget*>()),
@@ -209,7 +211,8 @@ ApplicationWindow::ApplicationWindow()
        actionNextWindow(new QAction(QIcon(QPixmap(":/next.xpm")),
                         tr("&Next","next window"), this)),
        actionPrevWindow(new QAction(QIcon(QPixmap(":/prev.xpm")),
-                        tr("&Previous","previous window"), this))
+                        tr("&Previous","previous window"), this)),
+       cg(new SettingsDialog(this))
 
 {
     setAttribute(Qt::WA_DeleteOnClose);
@@ -234,15 +237,15 @@ ApplicationWindow::ApplicationWindow()
 	explorerWindow->setMinimumHeight(150);
 	addDockWidget( Qt::BottomDockWidgetArea, explorerWindow );
 
-	folders->header()->setClickEnabled( false );
-	folders->addColumn( tr("Folder") );
-	folders->setRootIsDecorated( true );
-	folders->setResizeMode(Q3ListView::LastColumn);
-	folders->header()->hide();
-	folders->setSelectionMode(Q3ListView::Single);
-	folders->setDefaultRenameAction(Q3ListView::Accept);
+//	folders->header()->setClickEnabled( false );
+//	folders->addColumn( tr("Folder") );
+//	folders->setRootIsDecorated( true );
+//	folders->setResizeMode(Q3ListView::LastColumn);
+//	folders->header()->hide();
+    //folders->setSelectionMode(Q3ListView::Single);
+    //folders->setDefaultRenameAction(Q3ListView::Accept);
 
-	connect(folders, SIGNAL(currentChanged(Q3ListViewItem *)),
+/*	connect(folders, SIGNAL(currentChanged(Q3ListViewItem *)),
 			this, SLOT(folderItemChanged(Q3ListViewItem *)));
 	connect(folders, SIGNAL(itemRenamed(Q3ListViewItem *, int, const QString &)),
 			this, SLOT(renameFolder(Q3ListViewItem *, int, const QString &)));
@@ -255,7 +258,7 @@ ApplicationWindow::ApplicationWindow()
 	connect(folders, SIGNAL(renameItem(Q3ListViewItem *)),
 			this, SLOT(startRenameFolder(Q3ListViewItem *)));
 	connect(folders, SIGNAL(addFolderItem()), this, SLOT(addFolder()));
-	connect(folders, SIGNAL(deleteSelection()), this, SLOT(deleteSelectedItems()));
+    connect(folders, SIGNAL(deleteSelection()), this, SLOT(deleteSelectedItems()));
 
     FolderListItem *fli = new FolderListItem(folders, current_folder);
 	current_folder->setFolderListItem(fli);
@@ -275,7 +278,7 @@ ApplicationWindow::ApplicationWindow()
 	explorerSplitter->addWidget(lv);
 	explorerWindow->setWidget(explorerSplitter);
 	explorerSplitter->setSizes( QList<int>() << 50 << 50);
-	explorerWindow->hide();
+    explorerWindow->hide();*/
 
 	logWindow->setObjectName("logWindow"); // this is needed for QMainWindow::restoreState()
 	logWindow->setWindowTitle(tr("Results Log"));
@@ -315,7 +318,7 @@ ApplicationWindow::ApplicationWindow()
 
 	connect(this, SIGNAL(modified()),this, SLOT(modifiedProject()));
 	connect(d_workspace, SIGNAL(windowActivated (QWidget*)),this, SLOT(windowActivated(QWidget*)));
-	connect(lv, SIGNAL(doubleClicked(Q3ListViewItem *)),
+/*	connect(lv, SIGNAL(doubleClicked(Q3ListViewItem *)),
 			this, SLOT(folderItemDoubleClicked(Q3ListViewItem *)));
 	connect(lv, SIGNAL(contextMenuRequested(Q3ListViewItem *, const QPoint &, int)),
 			this, SLOT(showWindowPopupMenu(Q3ListViewItem *, const QPoint &, int)));
@@ -328,7 +331,7 @@ ApplicationWindow::ApplicationWindow()
 	connect(lv, SIGNAL(addFolderItem()), this, SLOT(addFolder()));
 	connect(lv, SIGNAL(deleteSelection()), this, SLOT(deleteSelectedItems()));
 	connect(lv, SIGNAL(itemRenamed(Q3ListViewItem *, int, const QString &)),
-			this, SLOT(renameWindow(Q3ListViewItem *, int, const QString &)));
+            this, SLOT(renameWindow(Q3ListViewItem *, int, const QString &)));*/
 	connect(scriptEnv, SIGNAL(error(const QString&,const QString&,int)),
 			this, SLOT(scriptError(const QString&,const QString&,int)));
 	connect(scriptEnv, SIGNAL(print(const QString&)), this, SLOT(scriptPrint(const QString&)));
@@ -374,7 +377,7 @@ void ApplicationWindow::applyUserSettings()
 	cg.setColor(QColorGroup::Text, QColor(panelsTextColor) );
 	cg.setColor(QColorGroup::WindowText, QColor(panelsTextColor) );
 	cg.setColor(QColorGroup::HighlightedText, QColor(panelsTextColor) );
-	lv->setPalette(QPalette(cg, cg, cg));
+    //lv->setPalette(QPalette(cg, cg, cg));
 	results->setPalette(QPalette(cg, cg, cg));
 
 	cg.setColor(QColorGroup::Text, QColor(Qt::green) );
@@ -684,11 +687,11 @@ void ApplicationWindow::insertTranslatedStrings()
 	if (projectname == "untitled")
 		setWindowTitle(tr("SciDAVis - untitled"));
 
-	lv->setColumnText (0, tr("Name"));
+/*	lv->setColumnText (0, tr("Name"));
 	lv->setColumnText (1, tr("Type"));
 	lv->setColumnText (2, tr("View"));
 	lv->setColumnText (3, tr("Created"));
-	lv->setColumnText (4, tr("Label"));
+    lv->setColumnText (4, tr("Label"));*/
 
 	explorerWindow->setWindowTitle(tr("Project Explorer"));
 	logWindow->setWindowTitle(tr("Results Log"));
@@ -1543,39 +1546,39 @@ void ApplicationWindow::plotVectXYAM()
 
 void ApplicationWindow::renameListViewItem(const QString& oldName,const QString& newName)
 {
-	Q3ListViewItem *it=lv->findItem (oldName,0, Q3ListView::ExactMatch | Qt::CaseSensitive );
-	if (it)
-		it->setText(0,newName);
+//	Q3ListViewItem *it=lv->findItem (oldName,0, Q3ListView::ExactMatch | Qt::CaseSensitive );
+//	if (it)
+//		it->setText(0,newName);
 }
 
 void ApplicationWindow::setListViewLabel(const QString& caption,const QString& label)
 {
-	Q3ListViewItem *it=lv->findItem ( caption, 0, Q3ListView::ExactMatch | Qt::CaseSensitive );
-	if (it)
-		it->setText(5,label);
+//	Q3ListViewItem *it=lv->findItem ( caption, 0, Q3ListView::ExactMatch | Qt::CaseSensitive );
+//	if (it)
+//		it->setText(5,label);
 }
 
 void ApplicationWindow::setListViewDate(const QString& caption,const QString& date)
 {
-	Q3ListViewItem *it=lv->findItem ( caption, 0, Q3ListView::ExactMatch | Qt::CaseSensitive );
-	if (it)
-		it->setText(4,date);
+//	Q3ListViewItem *it=lv->findItem ( caption, 0, Q3ListView::ExactMatch | Qt::CaseSensitive );
+//	if (it)
+//		it->setText(4,date);
 }
 
 void ApplicationWindow::setListView(const QString& caption,const QString& view)
 {
-	Q3ListViewItem *it=lv->findItem ( caption,0, Q3ListView::ExactMatch | Qt::CaseSensitive );
-	if (it)
-		it->setText(2,view);
+//	Q3ListViewItem *it=lv->findItem ( caption,0, Q3ListView::ExactMatch | Qt::CaseSensitive );
+//	if (it)
+//		it->setText(2,view);
 }
 
 QString ApplicationWindow::listViewDate(const QString& caption)
 {
-	Q3ListViewItem *it=lv->findItem (caption,0, Q3ListView::ExactMatch | Qt::CaseSensitive );
-	if (it)
-		return it->text(4);
-	else
-		return "";
+//	Q3ListViewItem *it=lv->findItem (caption,0, Q3ListView::ExactMatch | Qt::CaseSensitive );
+//	if (it)
+//		return it->text(4);
+//	else
+//		return "";
 }
 
 void ApplicationWindow::updateTableNames(const QString& oldName, const QString& newName)
@@ -3036,10 +3039,11 @@ void ApplicationWindow::updateCurves(Table *t, const QString& name)
 
 void ApplicationWindow::showPreferencesDialog()
 {
-	ConfigDialog* cd= new ConfigDialog(this);
-	cd->setAttribute(Qt::WA_DeleteOnClose);
-	cd->setColumnSeparator(columnSeparator);
-	cd->exec();
+    //ConfigDialog* cd= new ConfigDialog(this);
+    //SettingsDialog* cd= new SettingsDialog(this);
+    //cd->setAttribute(Qt::WA_DeleteOnClose);
+    //cd->setColumnSeparator(columnSeparator);
+    cg->exec();
 }
 
 void ApplicationWindow::setSaveSettings(bool autoSaving, int min)
@@ -3708,13 +3712,13 @@ ApplicationWindow* ApplicationWindow::openProject(const QString& fn)
 	progress.setLabelText(title);
 	progress.setActiveWindow();
 
-	Folder *cf = app->projectFolder();
-	app->folders->blockSignals (true);
+    //Folder *cf = app->projectFolder();
+//	app->folders->blockSignals (true);
 	app->blockSignals (true);
 	//rename project folder item
-	FolderListItem *item = (FolderListItem *)app->folders->firstChild();
-	item->setText(0, fi.baseName());
-	item->folder()->setName(fi.baseName());
+//	FolderListItem *item = (FolderListItem *)app->folders->firstChild();
+//	item->setText(0, fi.baseName());
+//	item->folder()->setName(fi.baseName());
 
 	//process tables and matrix information
 	while ( !t.atEnd() && !progress.wasCanceled())
@@ -3727,13 +3731,13 @@ ApplicationWindow* ApplicationWindow::openProject(const QString& fn)
 			Folder *f = new Folder(app->current_folder, list[1]);
 			f->setBirthDate(list[2]);
 			f->setModificationDate(list[3]);
-			if(list.count() > 4)
-				if (list[4] == "current")
-					cf = f;
+//			if(list.count() > 4)
+//				if (list[4] == "current")
+//					cf = f;
 
-			FolderListItem *fli = new FolderListItem(app->current_folder->folderListItem(), f);
-			fli->setText(0, list[1]);
-			f->setFolderListItem(fli);
+            //FolderListItem *fli = new FolderListItem(app->current_folder->folderListItem(), f);
+            //fli->setText(0, list[1]);
+            //f->setFolderListItem(fli);
 
 			app->current_folder = f;
 		}
@@ -3793,10 +3797,10 @@ ApplicationWindow* ApplicationWindow::openProject(const QString& fn)
 		else if  (s == "</folder>")
 		{
 			Folder *parent = (Folder *)app->current_folder->parent();
-			if (!parent)
-				app->current_folder = app->projectFolder();
-			else
-				app->current_folder = parent;
+//			if (!parent)
+//				app->current_folder = app->projectFolder();
+//			else
+//				app->current_folder = parent;
 		}
 	}
 
@@ -3890,10 +3894,10 @@ ApplicationWindow* ApplicationWindow::openProject(const QString& fn)
 		else if  (s == "</folder>")
 		{
 			Folder *parent = (Folder *)app->current_folder->parent();
-			if (!parent)
-				app->current_folder = projectFolder();
-			else
-				app->current_folder = parent;
+//			if (!parent)
+//				app->current_folder = projectFolder();
+//			else
+//				app->current_folder = parent;
 		}
 		else if  (s.left(5)=="<log>")
 		{//process analysis information
@@ -3917,10 +3921,10 @@ ApplicationWindow* ApplicationWindow::openProject(const QString& fn)
 
 	app->logInfo=app->logInfo.remove ("</log>\n", false);
 
-	app->folders->setCurrentItem(cf->folderListItem());
-	app->folders->blockSignals (false);
+    //app->folders->setCurrentItem(cf->folderListItem());
+    //app->folders->blockSignals (false);
 	//change folder to user defined current folder
-	app->changeFolder(cf, true);
+    //app->changeFolder(cf, true);
 
 	app->blockSignals (false);
 	app->renamedTables.clear();
@@ -3938,10 +3942,10 @@ ApplicationWindow* ApplicationWindow::openProject(const QString& fn)
 
 void ApplicationWindow::executeNotes()
 {
-	QList<MyWidget *> lst = projectFolder()->windowsList();
-	foreach(MyWidget *widget, lst)
-		if (widget->inherits("Note") && ((Note*)widget)->autoexec())
-			((Note*)widget)->executeAll();
+//	QList<MyWidget *> lst = projectFolder()->windowsList();
+//	foreach(MyWidget *widget, lst)
+//		if (widget->inherits("Note") && ((Note*)widget)->autoexec())
+//			((Note*)widget)->executeAll();
 }
 
 void ApplicationWindow::scriptError(const QString &message, const QString &scriptName, int lineNumber)
@@ -4997,10 +5001,11 @@ void ApplicationWindow::restoreWindowGeometry(ApplicationWindow *app, MyWidget *
 	w->blockSignals (false);
 }
 
-Folder* ApplicationWindow::projectFolder()
-{
-	return ((FolderListItem *)folders->firstChild())->folder();
-}
+//Folder* ApplicationWindow::projectFolder()
+//{
+//	return ((FolderListItem *)folders->firstChild())->folder();
+//    return;
+//}
 
 bool ApplicationWindow::saveProject()
 {
@@ -5020,7 +5025,7 @@ bool ApplicationWindow::saveProject()
 		compress = true;
 	}
 
-	saveFolder(projectFolder(), fn);
+//	saveFolder(projectFolder(), fn);
 
 	if (compress)
 		file_compress(QFile::encodeName(fn).constData(), "wb9");
@@ -5071,9 +5076,9 @@ void ApplicationWindow::saveProjectAs()
 
 			QFileInfo fi(fn);
 			QString baseName = fi.baseName();
-			FolderListItem *item = (FolderListItem *)folders->firstChild();
-			item->setText(0, baseName);
-			item->folder()->setName(baseName);
+            //FolderListItem *item = (FolderListItem *)folders->firstChild();
+            //item->setText(0, baseName);
+            //item->folder()->setName(baseName);
 		}
 	}
 }
@@ -5150,16 +5155,16 @@ void ApplicationWindow::renameWindow(Q3ListViewItem *item, int, const QString &t
 	if (!item)
 		return;
 
-	MyWidget *w = ((WindowListItem *)item)->window();
-	if (!w || text == w->name())
-		return;
+//	MyWidget *w = ((WindowListItem *)item)->window();
+//	if (!w || text == w->name())
+//		return;
 
-	while(!renameWindow(w, text))
-	{
-		item->setRenameEnabled (0, true);
-		item->startRename (0);
-		return;
-	}
+//	while(!renameWindow(w, text))
+//	{
+//		item->setRenameEnabled (0, true);
+//		item->startRename (0);
+//		return;
+//	}
 }
 
 bool ApplicationWindow::renameWindow(MyWidget *w, const QString &text)
@@ -6283,12 +6288,12 @@ void ApplicationWindow::print()
 // print window from project explorer
 void ApplicationWindow::printWindow()
 {
-	WindowListItem *it = (WindowListItem *)lv->currentItem();
-	MyWidget *w= it->window();
-	if (!w)
-		return;
+    //WindowListItem *it = (WindowListItem *)lv->currentItem();
+    //MyWidget *w= it->window();
+    //if (!w)
+    //	return;
 
-	print(w);
+    //print(w);
 }
 
 void ApplicationWindow::printAllPlots()
@@ -6975,11 +6980,11 @@ void ApplicationWindow::addColToTable()
 
 void ApplicationWindow::clearSelection()
 {
-	if(lv->hasFocus())
-	{
-		deleteSelectedItems();
-		return;
-	}
+    //if(lv->hasFocus())
+    //{
+        //deleteSelectedItems();
+        //return;
+    //}
 
 	QWidget* m = (QWidget*)d_workspace->activeWindow();
 	if (!m)
@@ -7356,8 +7361,8 @@ void ApplicationWindow::activateWindow() {
   }
   raise();
   show();
-  WindowListItem *it = (WindowListItem *)lv->currentItem();
-  activateWindow(it->window());
+  //WindowListItem *it = (WindowListItem *)lv->currentItem();
+  //activateWindow(it->window());
 }
 
 void ApplicationWindow::activateWindow(MyWidget *w)
@@ -7372,7 +7377,7 @@ void ApplicationWindow::activateWindow(MyWidget *w)
 	emit modified();
 }
 
-void ApplicationWindow::maximizeWindow(Q3ListViewItem * lbi)
+/*void ApplicationWindow::maximizeWindow(Q3ListViewItem * lbi)
 {
 	if (!lbi || lbi->rtti() == FolderListItem::RTTI)
 		return;
@@ -7384,7 +7389,7 @@ void ApplicationWindow::maximizeWindow(Q3ListViewItem * lbi)
 	w->setMaximized();
 	updateWindowLists(w);
 	emit modified();
-}
+}*/
 
 void ApplicationWindow::maximizeWindow()
 {
@@ -7471,9 +7476,9 @@ void ApplicationWindow::closeWindow(MyWidget* window)
 	window->folder()->removeWindow(window);
 
 	//update list view in project explorer
-	Q3ListViewItem *it=lv->findItem (window->name(), 0, Q3ListView::ExactMatch|Q3ListView::CaseSensitive);
-	if (it)
-		lv->takeItem(it);
+    //Q3ListViewItem *it=lv->findItem (window->name(), 0, Q3ListView::ExactMatch|Q3ListView::CaseSensitive);
+    //if (it)
+    //	lv->takeItem(it);
 
 	if (window->inherits("Matrix"))
 		window->setParent(0);
@@ -7740,33 +7745,33 @@ void ApplicationWindow::customEvent(QEvent *e)
 
 void ApplicationWindow::deleteSelectedItems()
 {
-	if (folders->hasFocus() && folders->currentItem() != folders->firstChild())
-	{//we never allow the user to delete the project folder item
-		deleteFolder();
-		return;
-	}
+    //if (folders->hasFocus() && folders->currentItem() != folders->firstChild())
+    //{//we never allow the user to delete the project folder item
+    //	deleteFolder();
+    //	return;
+    //}
 
-	Q3ListViewItem *item;
-	QList<Q3ListViewItem *> lst;
-	for (item = lv->firstChild(); item; item = item->nextSibling())
-	{
-		if (item->isSelected())
-			lst.append(item);
-	}
+    //Q3ListViewItem *item;
+    //QList<Q3ListViewItem *> lst;
+    //for (item = lv->firstChild(); item; item = item->nextSibling())
+    //{
+    //	if (item->isSelected())
+    //		lst.append(item);
+    //}
 
-	folders->blockSignals(true);
-	foreach(item, lst)
-	{
-		if (item->rtti() == FolderListItem::RTTI)
-		{
-			Folder *f = ((FolderListItem *)item)->folder();
-			if (deleteFolder(f))
-				delete item;
-		}
-		else
-			((WindowListItem *)item)->window()->close();
-	}
-	folders->blockSignals(false);
+    //folders->blockSignals(true);
+    //foreach(item, lst)
+    //{
+    //	if (item->rtti() == FolderListItem::RTTI)
+    //	{
+    //		Folder *f = ((FolderListItem *)item)->folder();
+    //		if (deleteFolder(f))
+    //			delete item;
+    //	}
+    //	else
+    //		((WindowListItem *)item)->window()->close();
+    //}
+    //folders->blockSignals(false);
 }
 
 void ApplicationWindow::showListViewSelectionMenu(const QPoint &p)
@@ -7791,11 +7796,11 @@ void ApplicationWindow::showListViewPopupMenu(const QPoint &p)
 
 	cm.insertItem(IconLoader::load("folder-explorer"), tr("New F&older"), this, SLOT(addFolder()), Qt::Key_F7);
 	cm.addSeparator();
-	cm.insertItem(tr("Auto &Column Width"), lv, SLOT(adjustColumns()));
+    //cm.insertItem(tr("Auto &Column Width"), lv, SLOT(adjustColumns()));
 	cm.exec(p);
 }
 
-void ApplicationWindow::showWindowPopupMenu(Q3ListViewItem *it, const QPoint &p, int)
+/*void ApplicationWindow::showWindowPopupMenu(Q3ListViewItem *it, const QPoint &p, int)
 {
 	if (folders->isRenaming())
 		return;
@@ -7829,7 +7834,7 @@ void ApplicationWindow::showWindowPopupMenu(Q3ListViewItem *it, const QPoint &p,
 
 	MyWidget *w= ((WindowListItem *)it)->window();
 	if (w) showWindowMenu(w);
-}
+}*/
 
 void ApplicationWindow::showTable(const QString& curve)
 {
@@ -7842,9 +7847,9 @@ void ApplicationWindow::showTable(const QString& curve)
 	w->deselectAll();
 	w->setCellsSelected(0, colIndex, w->d_future_table->rowCount()-1, colIndex);
 	w->showMaximized();
-	Q3ListViewItem *it=lv->findItem (w->name(), 0, Q3ListView::ExactMatch | Qt::CaseSensitive );
-	if (it)
-		it->setText(2,tr("Maximized"));
+    //Q3ListViewItem *it=lv->findItem (w->name(), 0, Q3ListView::ExactMatch | Qt::CaseSensitive );
+    //if (it)
+    //	it->setText(2,tr("Maximized"));
 	emit modified();
 }
 
@@ -10424,7 +10429,7 @@ void ApplicationWindow::setAppColors(const QColor& wc,const QColor& pc,const QCo
 	cg.setColor(QColorGroup::Text, QColor(panelsTextColor) );
 	cg.setColor(QColorGroup::WindowText, QColor(panelsTextColor) );
 	cg.setColor(QColorGroup::HighlightedText, QColor(panelsTextColor) );
-	lv->setPalette(QPalette(cg, cg, cg));
+    //lv->setPalette(QPalette(cg, cg, cg));
 	results->setPalette(QPalette(cg, cg, cg));
 }
 
@@ -11683,7 +11688,7 @@ void ApplicationWindow::deleteFitTables()
 
 QWidgetList* ApplicationWindow::windowsList()
 {
-	QWidgetList *lst = new QWidgetList;
+/*	QWidgetList *lst = new QWidgetList;
 
     Folder *project_folder = projectFolder();
 	FolderListItem *item = project_folder->folderListItem();
@@ -11700,7 +11705,7 @@ QWidgetList* ApplicationWindow::windowsList()
 	foreach(QWidget *w, *outWindows)
 		lst->append(w);
 
-	return lst;
+    return lst;*/
 }
 
 void ApplicationWindow::updateRecentProjectsList()
@@ -12163,7 +12168,7 @@ void ApplicationWindow::appendProject(const QString& fn)
 
 	Folder *cf = current_folder;
 	FolderListItem *item = (FolderListItem *)current_folder->folderListItem();
-	folders->blockSignals (true);
+    //folders->blockSignals (true);
 	blockSignals (true);
 
 	QString baseName = fi.baseName();
@@ -12177,8 +12182,8 @@ void ApplicationWindow::appendProject(const QString& fn)
 	}
 
 	current_folder = new Folder(current_folder, baseName);
-	FolderListItem *fli = new FolderListItem(item, current_folder);
-	current_folder->setFolderListItem(fli);
+    //FolderListItem *fli = new FolderListItem(item, current_folder);
+    //current_folder->setFolderListItem(fli);
 
 	if (fn.contains(".opj", Qt::CaseInsensitive) || fn.contains(".ogm", Qt::CaseInsensitive) ||
         fn.contains(".ogw", Qt::CaseInsensitive) || fn.contains(".ogg", Qt::CaseInsensitive))
@@ -12223,9 +12228,9 @@ void ApplicationWindow::appendProject(const QString& fn)
 					if (lst[4] == "current")
 						cf = f;
 
-				FolderListItem *fli = new FolderListItem(current_folder->folderListItem(), f);
-				fli->setText(0, lst[1]);
-				f->setFolderListItem(fli);
+                //FolderListItem *fli = new FolderListItem(current_folder->folderListItem(), f);
+                //fli->setText(0, lst[1]);
+//				f->setFolderListItem(fli);
 
 				current_folder = f;
 			}
@@ -12263,10 +12268,10 @@ void ApplicationWindow::appendProject(const QString& fn)
 			else if  (s == "</folder>")
 			{
 				Folder *parent = (Folder *)current_folder->parent();
-				if (!parent)
-					current_folder = projectFolder();
-				else
-					current_folder = parent;
+//				if (!parent)
+//					current_folder = projectFolder();
+//				else
+//					current_folder = parent;
 			}
 		}
 
@@ -12345,16 +12350,16 @@ void ApplicationWindow::appendProject(const QString& fn)
 			else if  (s == "</folder>")
 			{
 				Folder *parent = (Folder *)current_folder->parent();
-				if (!parent)
-					current_folder = projectFolder();
-				else
-					current_folder = parent;
+//				if (!parent)
+//					current_folder = projectFolder();
+//				else
+//					current_folder = parent;
 			}
 		}
 		file->close(); delete file;
 	}
 
-	folders->blockSignals (false);
+//	folders->blockSignals (false);
 	//change folder to user defined current folder
 	changeFolder(cf);
 	blockSignals (false);
@@ -12489,12 +12494,12 @@ void ApplicationWindow::saveFolderAsProject(Folder *f)
 	}
 }
 
-void ApplicationWindow::showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p, int)
+/*void ApplicationWindow::showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p, int)
 {
 	showFolderPopupMenu(it, p, true);
-}
+}*/
 
-void ApplicationWindow::showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p, bool fromFolders)
+/*void ApplicationWindow::showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p, bool fromFolders)
 {
 	if (!it || folders->isRenaming())
 		return;
@@ -12553,7 +12558,7 @@ void ApplicationWindow::showFolderPopupMenu(Q3ListViewItem *it, const QPoint &p,
 	cm.addSeparator();
 	cm.insertItem(tr("&Properties..."), this, SLOT(folderProperties()));
 	cm.exec(p);
-}
+}*/
 
 void ApplicationWindow::setShowWindowsPolicy(int p)
 {
@@ -12585,18 +12590,18 @@ void ApplicationWindow::showFindDialogue()
 	fd->exec();
 }
 
-void ApplicationWindow::startRenameFolder()
-{
-	FolderListItem *fi = current_folder->folderListItem();
-	if (!fi)
-		return;
+//void ApplicationWindow::startRenameFolder()
+//{
+    //FolderListItem *fi = current_folder->folderListItem();
+    //if (!fi)
+    //	return;
 
-	disconnect(folders, SIGNAL(currentChanged(Q3ListViewItem *)), this, SLOT(folderItemChanged(Q3ListViewItem *)));
-	fi->setRenameEnabled (0, true);
-	fi->startRename (0);
-}
+    //disconnect(folders, SIGNAL(currentChanged(Q3ListViewItem *)), this, SLOT(folderItemChanged(Q3ListViewItem *)));
+    //fi->setRenameEnabled (0, true);
+    //fi->startRename (0);
+//}
 
-void ApplicationWindow::startRenameFolder(Q3ListViewItem *item)
+/*void ApplicationWindow::startRenameFolder(Q3ListViewItem *item)
 {
 	if (!item || item == folders->firstChild())
 		return;
@@ -12614,9 +12619,9 @@ void ApplicationWindow::startRenameFolder(Q3ListViewItem *item)
 		item->setRenameEnabled (0, true);
 		item->startRename (0);
 	}
-}
+}*/
 
-void ApplicationWindow::renameFolder(Q3ListViewItem *it, int col, const QString &text)
+/*void ApplicationWindow::renameFolder(Q3ListViewItem *it, int col, const QString &text)
 {
 	Q_UNUSED(col)
 
@@ -12649,10 +12654,10 @@ void ApplicationWindow::renameFolder(Q3ListViewItem *it, int col, const QString 
 
 	current_folder->setName(text);
 	it->setRenameEnabled (0, false);
-	connect(folders, SIGNAL(currentChanged(Q3ListViewItem *)),
-			this, SLOT(folderItemChanged(Q3ListViewItem *)));
-	folders->setCurrentItem(parent->folderListItem());//update the list views
-}
+    //connect(folders, SIGNAL(currentChanged(Q3ListViewItem *)),
+    //		this, SLOT(folderItemChanged(Q3ListViewItem *)));
+    //folders->setCurrentItem(parent->folderListItem());//update the list views
+}*/
 
 void ApplicationWindow::showAllFolderWindows()
 {
@@ -12686,8 +12691,8 @@ void ApplicationWindow::showAllFolderWindows()
 	if ( (current_folder->children()).isEmpty() )
 		return;
 
-	FolderListItem *fi = current_folder->folderListItem();
-	FolderListItem *item = (FolderListItem *)fi->firstChild();
+    /*FolderListItem *fi = current_folder->folderListItem();
+    FolderListItem *item = (FolderListItem *)fi->firstChild();
 	int initial_depth = item->depth();
 	while (item && item->depth() >= initial_depth)
 	{// show/hide windows in all subfolders
@@ -12721,12 +12726,12 @@ void ApplicationWindow::showAllFolderWindows()
 		}
 
 		item = (FolderListItem *)item->itemBelow();
-	}
+    }*/
 }
 
 void ApplicationWindow::hideAllFolderWindows()
 {
-	QList<MyWidget *> lst = current_folder->windowsList();
+    /*QList<MyWidget *> lst = current_folder->windowsList();
 	foreach(MyWidget *w, lst)
 		hideWindow(w);
 
@@ -12746,7 +12751,7 @@ void ApplicationWindow::hideAllFolderWindows()
 
 			item = (FolderListItem *)item->itemBelow();
 		}
-	}
+    }*/
 }
 
 void ApplicationWindow::projectProperties()
@@ -12819,15 +12824,15 @@ void ApplicationWindow::addFolder()
 		name += " ("+ QString::number(lst.size()+1)+")";
 
 	Folder *f = new Folder(current_folder, name);
-	addFolderListViewItem(f);
+    //addFolderListViewItem(f);
 
-	FolderListItem *fi = new FolderListItem(current_folder->folderListItem(), f);
-	if (fi)
-	{
-		f->setFolderListItem(fi);
-		fi->setRenameEnabled (0, true);
-		fi->startRename(0);
-	}
+    //FolderListItem *fi = new FolderListItem(current_folder->folderListItem(), f);
+    //if (fi)
+    //{
+    //	f->setFolderListItem(fi);
+    //	fi->setRenameEnabled (0, true);
+    //	fi->startRename(0);
+    //}
 }
 
 bool ApplicationWindow::deleteFolder(Folder *f)
@@ -12836,9 +12841,9 @@ bool ApplicationWindow::deleteFolder(Folder *f)
 				tr("Delete folder '%1' and all the windows it contains?").arg(f->name()),
 				tr("Yes"), tr("No"), 0, 0))
 		return false;
-	else
+    /*else
 	{
-		FolderListItem *fi = f->folderListItem();
+        FolderListItem *fi = f->folderListItem();
 		foreach(MyWidget *w, f->windowsList())
             closeWindow(w);
 
@@ -12865,28 +12870,28 @@ bool ApplicationWindow::deleteFolder(Folder *f)
 		delete f;
 		delete fi;
 		return true;
-	}
+    }*/
 }
 
 void ApplicationWindow::deleteFolder()
 {
 	Folder *parent = (Folder *)current_folder->parent();
-	if (!parent)
-		parent = projectFolder();
+//	if (!parent)
+//		parent = projectFolder();
 
-	folders->blockSignals(true);
+    //folders->blockSignals(true);
 
 	if (deleteFolder(current_folder)){
 		current_folder = parent;
-		folders->setCurrentItem(parent->folderListItem());
+        //folders->setCurrentItem(parent->folderListItem());
 		changeFolder(parent, true);
 	}
 
-	folders->blockSignals(false);
-	folders->setFocus();
+    //folders->blockSignals(false);
+    //folders->setFocus();
 }
 
-void ApplicationWindow::folderItemDoubleClicked(Q3ListViewItem *it)
+/*void ApplicationWindow::folderItemDoubleClicked(Q3ListViewItem *it)
 {
 	if (!it)
 		return;
@@ -12894,7 +12899,7 @@ void ApplicationWindow::folderItemDoubleClicked(Q3ListViewItem *it)
 	if (it->rtti() == FolderListItem::RTTI)
 	{
 		FolderListItem *item = ((FolderListItem *)it)->folder()->folderListItem();
-		folders->setCurrentItem(item);
+        //folders->setCurrentItem(item);
 	}
 	else if (it->rtti() == WindowListItem::RTTI)
 	{
@@ -12911,9 +12916,9 @@ void ApplicationWindow::folderItemDoubleClicked(Q3ListViewItem *it)
 				w->setNormal();
 		}
 	}
-}
+}*/
 
-void ApplicationWindow::folderItemChanged(Q3ListViewItem *it)
+/*void ApplicationWindow::folderItemChanged(Q3ListViewItem *it)
 {
 	if (!it)
 		return;
@@ -12921,7 +12926,7 @@ void ApplicationWindow::folderItemChanged(Q3ListViewItem *it)
 	it->setOpen(true);
 	changeFolder (((FolderListItem *)it)->folder());
 	folders->setFocus();
-}
+}*/
 
 void ApplicationWindow::hideFolderWindows(Folder *f)
 {
@@ -12932,9 +12937,9 @@ void ApplicationWindow::hideFolderWindows(Folder *f)
 	if ( (f->children()).isEmpty() )
 		return;
 
-	FolderListItem *fi = f->folderListItem();
-	FolderListItem *item = (FolderListItem *)fi->firstChild();
-	if (!item)
+//	FolderListItem *fi = f->folderListItem();
+//	FolderListItem *item = (FolderListItem *)fi->firstChild();
+/*	if (!item)
 		return;
 	int initial_depth = item->depth();
 	while (item && item->depth() >= initial_depth){
@@ -12942,7 +12947,7 @@ void ApplicationWindow::hideFolderWindows(Folder *f)
 		foreach(MyWidget *w, lst)
 			w->hide();
 		item = (FolderListItem *)item->itemBelow();
-	}
+    }*/
 }
 
 bool ApplicationWindow::changeFolder(Folder *newFolder, bool force)
@@ -12951,7 +12956,7 @@ bool ApplicationWindow::changeFolder(Folder *newFolder, bool force)
 		return false;
 
     deactivateFolders();
-	newFolder->folderListItem()->setActive(true);
+//	newFolder->folderListItem()->setActive(true);
 
     Folder *oldFolder = current_folder;
     MyWidget::Status old_active_window_state = MyWidget::Normal;
@@ -12968,13 +12973,13 @@ bool ApplicationWindow::changeFolder(Folder *newFolder, bool force)
 	hideFolderWindows(oldFolder);
 	current_folder = newFolder;
 
-	lv->clear();
+    //lv->clear();
 
 	QObjectList folderLst = newFolder->children();
-	if(!folderLst.isEmpty()){
-		foreach(QObject *f, folderLst)
-			addFolderListViewItem(static_cast<Folder *>(f));
-	}
+    //if(!folderLst.isEmpty()){
+        //foreach(QObject *f, folderLst)
+        //	addFolderListViewItem(static_cast<Folder *>(f));
+    //}
 
 	QList<MyWidget *> lst = newFolder->windowsList();
 	foreach(MyWidget *w, lst){
@@ -12992,7 +12997,7 @@ bool ApplicationWindow::changeFolder(Folder *newFolder, bool force)
         addListViewItem(w);
 	}
 
-	if (!(newFolder->children()).isEmpty()){
+    /*if (!(newFolder->children()).isEmpty()){
         FolderListItem *fi = newFolder->folderListItem();
         FolderListItem *item = (FolderListItem *)fi->firstChild();
 			if (!item)
@@ -13015,7 +13020,7 @@ bool ApplicationWindow::changeFolder(Folder *newFolder, bool force)
             }
 		item = (FolderListItem *)item->itemBelow();
         }
-	}
+    }*/
 
     d_workspace->blockSignals(false);
 
@@ -13048,17 +13053,17 @@ bool ApplicationWindow::changeFolder(Folder *newFolder, bool force)
 
 void ApplicationWindow::deactivateFolders()
 {
-	FolderListItem *item = (FolderListItem *)folders->firstChild();
-	while (item)
-	{
-		item->setActive(false);
-		item = (FolderListItem *)item->itemBelow();
-	}
+//	FolderListItem *item = (FolderListItem *)folders->firstChild();
+//	while (item)
+//	{
+//		item->setActive(false);
+//		item = (FolderListItem *)item->itemBelow();
+//	}
 }
 
 void ApplicationWindow::addListViewItem(MyWidget *w)
 {
-	if (!w)
+/*	if (!w)
 		return;
 
 	WindowListItem* it = new WindowListItem(lv, w);
@@ -13086,17 +13091,17 @@ void ApplicationWindow::addListViewItem(MyWidget *w)
 	it->setText(0, w->name());
     it->setText(2, w->aspect());
 	it->setText(3, w->birthDate());
-	it->setText(4, w->windowLabel());
+    it->setText(4, w->windowLabel());*/
 }
 
 void ApplicationWindow::windowProperties()
 {
-	WindowListItem *it = (WindowListItem *)lv->currentItem();
-	MyWidget *w = it->window();
-	if (!w)
-		return;
+    //WindowListItem *it = (WindowListItem *)lv->currentItem();
+    //MyWidget *w = it->window();
+    //if (!w)
+    //	return;
 
-	QMessageBox *mbox = new QMessageBox ( tr("Properties"), QString(), QMessageBox::NoIcon,
+    /*QMessageBox *mbox = new QMessageBox ( tr("Properties"), QString(), QMessageBox::NoIcon,
 			QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton, this);
 
 	QString s = QString(w->name()) + "\n\n";
@@ -13133,10 +13138,10 @@ void ApplicationWindow::windowProperties()
 	s += tr("Created") + ": " + w->birthDate() + "\n\n";
 	s += tr("Status") + ": " + it->text(2) + "\n\n";
 	mbox->setText(s);
-	mbox->show();
+    mbox->show();*/
 }
 
-void ApplicationWindow::addFolderListViewItem(Folder *f)
+/*void ApplicationWindow::addFolderListViewItem(Folder *f)
 {
 	if (!f)
 		return;
@@ -13146,7 +13151,7 @@ void ApplicationWindow::addFolderListViewItem(Folder *f)
 	it->setText(0, f->name());
 	it->setText(1, tr("Folder"));
 	it->setText(3, f->birthDate());
-}
+}*/
 
 void ApplicationWindow::find(const QString& s, bool windowNames, bool labels,
 		bool folderNames, bool caseSensitive, bool partialMatch,
@@ -13163,7 +13168,7 @@ void ApplicationWindow::find(const QString& s, bool windowNames, bool labels,
 
 		if (subfolders)
 		{
-			FolderListItem *item = (FolderListItem *)folders->currentItem()->firstChild();
+/*			FolderListItem *item = (FolderListItem *)folders->currentItem()->firstChild();
 			while (item)
 			{
 				Folder *f = item->folder();
@@ -13175,7 +13180,7 @@ void ApplicationWindow::find(const QString& s, bool windowNames, bool labels,
 					return;
 				}
 				item = (FolderListItem *)item->itemBelow();
-			}
+            }*/
 		}
 	}
 
@@ -13184,13 +13189,13 @@ void ApplicationWindow::find(const QString& s, bool windowNames, bool labels,
 		Folder *f = current_folder->findSubfolder(s, caseSensitive, partialMatch);
 		if (f)
 		{
-			folders->setCurrentItem(f->folderListItem());
+//			folders->setCurrentItem(f->folderListItem());
 			return;
 		}
 
 		if (subfolders)
 		{
-			FolderListItem *item = (FolderListItem *)folders->currentItem()->firstChild();
+/*			FolderListItem *item = (FolderListItem *)folders->currentItem()->firstChild();
 			while (item)
 			{
 				Folder *f = item->folder()->findSubfolder(s, caseSensitive, partialMatch);
@@ -13201,7 +13206,7 @@ void ApplicationWindow::find(const QString& s, bool windowNames, bool labels,
 				}
 
 				item = (FolderListItem *)item->itemBelow();
-			}
+            }*/
 		}
 	}
 
@@ -13209,7 +13214,7 @@ void ApplicationWindow::find(const QString& s, bool windowNames, bool labels,
 			tr("Sorry, no match found for string: '%1'").arg(s));
 }
 
-void ApplicationWindow::dropFolderItems(Q3ListViewItem *dest)
+/*void ApplicationWindow::dropFolderItems(Q3ListViewItem *dest)
 {
 	if (!dest || draggedItems.isEmpty ())
 		return;
@@ -13275,9 +13280,9 @@ void ApplicationWindow::dropFolderItems(Q3ListViewItem *dest)
 	changeFolder(dest_f, true);
 	folders->setFocus();
 	modifiedProject();
-}
+}*/
 
-void ApplicationWindow::moveFolder(FolderListItem *src, FolderListItem *dest)
+/*void ApplicationWindow::moveFolder(FolderListItem *src, FolderListItem *dest)
 {
 	folders->blockSignals(true);
 
@@ -13332,7 +13337,7 @@ void ApplicationWindow::moveFolder(FolderListItem *src, FolderListItem *dest)
 	delete src_f;
 	delete src;
 	folders->blockSignals(false);
-}
+}*/
 
 #ifdef SEARCH_FOR_UPDATES
 

@@ -44,6 +44,9 @@
 #include <QEvent>
 #include <QDropEvent>
 
+#include <QListWidget>
+#include <QListWidgetItem>
+
 class FolderListItem;
 class Table;
 class Matrix;
@@ -55,6 +58,9 @@ class QDragMoveEvent;
 class QDragLeaveEvent;
 class QDropEvent;
 class Q3DragObject;
+
+class QListWidgetItem;
+class QListWidget;
 
 //! Folder for the project explorer
 class Folder : public QObject
@@ -150,16 +156,16 @@ protected:
  *
  *****************************************************************************/
 //! Windows list item class
-class WindowListItem : public Q3ListViewItem
+/*class WindowListItem : public QListWidgetItem
 {
 public:
-    WindowListItem( Q3ListView *parent, MyWidget *w );
+    WindowListItem( QListWidget *parent, MyWidget *w );
 
     MyWidget *window() { return myWindow; };
 
 protected:
     MyWidget *myWindow;
-};
+};*/
 
 /*****************************************************************************
  *
@@ -167,10 +173,10 @@ protected:
  *
  *****************************************************************************/
 //! Folders list item class
-class FolderListItem : public Q3ListViewItem
+/*class FolderListItem : public QListWidgetItem
 {
 public:
-    FolderListItem( Q3ListView *parent, Folder *f );
+    FolderListItem( QListWidget *parent, Folder *f );
     FolderListItem( FolderListItem *parent, Folder *f );
 
 	enum {RTTI = 1001};
@@ -179,17 +185,17 @@ public:
 
 	virtual int rtti() const {return (int)RTTI;};
 
-    Folder *folder() { return myFolder; };
+    Folder *folder() { return myFolder; };*/
 
 	//! Checks weather the folder item is a grandchild of the source folder
 	/**
 	 * \param src source folder item
 	 */
-	bool isChildOf(FolderListItem *src);
+    /*bool isChildOf(FolderListItem *src);
 
 protected:
     Folder *myFolder;
-};
+};*/
 
 /*****************************************************************************
  *
@@ -197,7 +203,7 @@ protected:
  *
  *****************************************************************************/
 //! Folder list view class
-class FolderListView : public Q3ListView
+/*class FolderListView : public QListWidget
 {
     Q_OBJECT
 
@@ -219,15 +225,15 @@ protected:
 	void enterEvent(QEvent *){mousePressed = false;};
 
 signals:
-	void dragItems(QList<Q3ListViewItem *> items);
-	void dropItems(Q3ListViewItem *dest);
-	void renameItem(Q3ListViewItem *item);
+    void dragItems(QList<QListWidgetItem *> items);
+    void dropItems(QListWidgetItem *dest);
+    void renameItem(QListWidgetItem *item);
 	void addFolderItem();
 	void deleteSelection();
 
 private:
 	bool mousePressed;
 	QPoint presspos;
-};
+};*/
 
 #endif
