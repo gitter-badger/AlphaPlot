@@ -211,8 +211,8 @@ ApplicationWindow::ApplicationWindow()
        actionNextWindow(new QAction(QIcon(QPixmap(":/next.xpm")),
                         tr("&Next","next window"), this)),
        actionPrevWindow(new QAction(QIcon(QPixmap(":/prev.xpm")),
-                        tr("&Previous","previous window"), this)),
-       cg(new SettingsDialog(this))
+                        tr("&Previous","previous window"), this))
+      // cg(new SettingsDialog(this))
 
 {
     setAttribute(Qt::WA_DeleteOnClose);
