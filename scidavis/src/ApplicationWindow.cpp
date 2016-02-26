@@ -3043,7 +3043,7 @@ void ApplicationWindow::showPreferencesDialog()
     //SettingsDialog* cd= new SettingsDialog(this);
     //cd->setAttribute(Qt::WA_DeleteOnClose);
     //cd->setColumnSeparator(columnSeparator);
-    cg->exec();
+    //cg->exec();
 }
 
 void ApplicationWindow::setSaveSettings(bool autoSaving, int min)
