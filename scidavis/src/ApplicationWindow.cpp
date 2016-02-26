@@ -114,7 +114,7 @@
 #include "scripting/ScriptingLangDialog.h"
 #include "scripting/widgets/ConsoleWidget.h"
 
-#include "ui/SettingsDialog.h"
+//#include "ui/SettingsDialog.h"
 
 #include <stdio.h>
 #include <stdlib.h>
