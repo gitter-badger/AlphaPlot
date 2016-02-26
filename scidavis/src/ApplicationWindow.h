@@ -88,7 +88,7 @@ class Project;
 class AbstractAspect;
 
 class ConsoleWidget;
-class SettingsDialog;
+//class SettingsDialog;
 
 #ifndef TS_PATH
 #define TS_PATH (qApp->applicationDirPath() + "/translations")
@@ -1157,7 +1157,7 @@ private:
 	Project * d_project;
 
 	bool was_maximized_;
-    SettingsDialog *cg;
+    //SettingsDialog *cg;
 
 private slots:
 	void removeDependentTableStatistics(const AbstractAspect *aspect);
