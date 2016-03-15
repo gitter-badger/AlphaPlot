@@ -32,8 +32,8 @@
 #define APPLICATION_H
 
 #include <QMainWindow>
-#include <Q3ListView>
-#include <Q3Header>
+//#include <Q3ListView>
+//#include <Q3Header>
 #ifdef SEARCH_FOR_UPDATES
 #include <QHttp>
 #endif
@@ -424,7 +424,7 @@ public slots:
 	void renameActiveWindow();
 
 	//!  Called when the user presses F2 and an item is selected in lv.
-	void renameWindow(Q3ListViewItem *item, int, const QString &s);
+	//void renameWindow(Q3ListViewItem *item, int, const QString &s);
 
 	//!  Checks weather the new window name is valid and modifies the name.
 	bool renameWindow(MyWidget *w, const QString &text);

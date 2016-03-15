@@ -119,7 +119,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <q3listview.h>
+//#include <q3listview.h>
 
 #include <QFileDialog>
 #include <QInputDialog>
@@ -5150,10 +5150,10 @@ void ApplicationWindow::renameActiveWindow()
 	rwd->exec();
 }
 
-void ApplicationWindow::renameWindow(Q3ListViewItem *item, int, const QString &text)
-{
-	if (!item)
-		return;
+//void ApplicationWindow::renameWindow(Q3ListViewItem *item, int, const QString &text)
+//{
+	//if (!item)
+	//	return;
 
 //	MyWidget *w = ((WindowListItem *)item)->window();
 //	if (!w || text == w->name())
@@ -5165,7 +5165,7 @@ void ApplicationWindow::renameWindow(Q3ListViewItem *item, int, const QString &t
 //		item->startRename (0);
 //		return;
 //	}
-}
+//}
 
 bool ApplicationWindow::renameWindow(MyWidget *w, const QString &text)
 {
@@ -7650,7 +7650,7 @@ void ApplicationWindow::timerEvent ( QTimerEvent *e)
 void ApplicationWindow::dropEvent( QDropEvent* e )
 {
 	QStringList fileNames;
-	if (Q3UriDrag::decodeLocalFiles(e, fileNames))
+	//if (Q3UriDrag::decodeLocalFiles(e, fileNames))
 	{
 		QList<QByteArray> lst = QImageReader::supportedImageFormats() << "JPG";
 		QStringList asciiFiles;
@@ -7687,7 +7687,7 @@ void ApplicationWindow::dragEnterEvent( QDragEnterEvent* e )
 		return;
 	}
 
-	e->accept(Q3UriDrag::canDecode(e));
+	//e->accept(Q3UriDrag::canDecode(e));
 }
 
 void ApplicationWindow::closeEvent( QCloseEvent* ce )
