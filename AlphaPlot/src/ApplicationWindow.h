@@ -67,6 +67,7 @@ class QMenu;
 class QToolBar;
 class QStatusBar;
 class QSignalMapper;
+class QMdiArea;
 
 class Matrix;
 class Table;
@@ -89,6 +90,8 @@ class AbstractAspect;
 class ConsoleWidget;
 class IconLoader;
 class SettingsDialog;
+
+class QMdiSubWindow;
 
 #ifndef TS_PATH
 #define TS_PATH (qApp->applicationDirPath() + "/translations")
@@ -152,7 +155,8 @@ class ApplicationWindow : public QMainWindow, public scripted {
 #ifdef SCRIPTING_CONSOLE
   ConsoleWidget* consoleWindow;
 #endif
-  QWorkspace* d_workspace;
+
+  QMdiArea* d_workspace;
   QToolBar *file_tools, *graph_tools, *table_tools, *plot_tools,
       *graph_3D_tools, *edit_tools, *matrix_plot_tools;
   FolderListView* lv;
@@ -211,7 +215,7 @@ class ApplicationWindow : public QMainWindow, public scripted {
   /*!
 Arranges all the visible project windows in a cascade pattern.
 */
-  void cascade();
+  void  cascadeSubWindows();
 
   void saveProjectAs();
   bool saveProject();
@@ -559,7 +563,7 @@ Arranges all the visible project windows in a cascade pattern.
   void disableActions();
   void customToolBars(QWidget* w);
   void customMenu(QWidget* w);
-  void windowActivated(QWidget* w);
+  void windowActivated(QMdiSubWindow *subWindow);
   //@}
 
   //! \name Table Tools
